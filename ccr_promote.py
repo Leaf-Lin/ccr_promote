@@ -30,7 +30,7 @@
 # optional arguments:
 #   -h, --help            show this help message and exit
 #   -l LEADER, --leader LEADER
-#                         Specify follower from specific leader cluster
+#                         Specify specific leader cluster for promoting.
 #
 ###############################################################################
 
