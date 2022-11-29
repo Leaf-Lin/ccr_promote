@@ -42,5 +42,6 @@ optional arguments:
 - To Run: `python3 ccr_promote.py [path_to_diag]/api-diagnostics-ccr_promote_test -l [leader_cluster]`
 
 - Diagnostics (Input) can be generated from https://github.com/elastic/support-diagnostics
+  - Several input files are available in the examples folder.
 - Output files are written to the diganostics folder "promote-<cluster_id>.txt"
 - Logging files are written to "promote_api_builder.log"
