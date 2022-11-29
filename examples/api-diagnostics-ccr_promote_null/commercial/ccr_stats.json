@@ -1,0 +1,52 @@
+{
+  "auto_follow_stats" : {
+    "number_of_failed_follow_indices" : 992,
+    "number_of_failed_remote_cluster_state_requests" : 0,
+    "number_of_successful_follow_indices" : 15,
+    "recent_auto_follow_errors" : [
+      {
+        "leader_index" : "logs:.ds-logs-system.syslog-default-2022.11.27-000012",
+        "timestamp" : 1669678820007,
+        "auto_follow_exception" : {
+          "type" : "exception",
+          "reason" : "java.lang.IllegalArgumentException: cannot follow backing index [.ds-logs-system.syslog-default-2022.11.27-000012], because local data stream [logs-system.syslog-default] is no longer marked as replicated",
+          "caused_by" : {
+            "type" : "illegal_argument_exception",
+            "reason" : "cannot follow backing index [.ds-logs-system.syslog-default-2022.11.27-000012], because local data stream [logs-system.syslog-default] is no longer marked as replicated"
+          }
+        }
+      },
+      {
+        "leader_index" : "logs:.ds-logs-system.syslog-default-2022.11.27-000013",
+        "timestamp" : 1669678820007,
+        "auto_follow_exception" : {
+          "type" : "exception",
+          "reason" : "java.lang.IllegalArgumentException: cannot follow backing index [.ds-logs-system.syslog-default-2022.11.27-000013], because local data stream [logs-system.syslog-default] is no longer marked as replicated",
+          "caused_by" : {
+            "type" : "illegal_argument_exception",
+            "reason" : "cannot follow backing index [.ds-logs-system.syslog-default-2022.11.27-000013], because local data stream [logs-system.syslog-default] is no longer marked as replicated"
+          }
+        }
+      },
+      {
+        "leader_index" : "logs:.ds-logs-test-datastream-2022.11.28-000001",
+        "timestamp" : 1669678820007,
+        "auto_follow_exception" : {
+          "type" : "snapshot_restore_exception",
+          "reason" : "[_ccr_intel:_latest_/_latest_] cannot restore index [.ds-logs-test-datastream-2022.11.28-000001] because an open index with same name already exists in the cluster. Either close or delete the existing index or restore the index under a different name by providing a rename pattern and replacement name"
+        }
+      }
+    ],
+    "auto_followed_clusters" : [
+      {
+        "cluster_name" : "intel",
+        "time_since_last_check_millis" : 45615,
+        "last_seen_metadata_version" : 28558
+      }
+    ]
+  },
+  "follow_stats" : {
+    "indices" : [
+    ]
+  }
+}

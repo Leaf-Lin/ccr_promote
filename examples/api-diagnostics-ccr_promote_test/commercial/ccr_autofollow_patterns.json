@@ -1,0 +1,40 @@
+{
+  "patterns" : [
+    {
+      "name" : "logs",
+      "pattern" : {
+        "active" : true,
+        "remote_cluster" : "intel",
+        "leader_index_patterns" : [
+          ".ds-logs-*"
+        ],
+        "leader_index_exclusion_patterns" : [ ],
+        "follow_index_pattern" : "{{leader_index}}"
+      }
+    },
+    {
+      "name" : "test",
+      "pattern" : {
+        "active" : true,
+        "remote_cluster" : "arm",
+        "leader_index_patterns" : [
+          ".ds-logs-*"
+        ],
+        "leader_index_exclusion_patterns" : [ ],
+        "follow_index_pattern" : "{{leader_index}}"
+      }
+    },
+    {
+      "name" : "metrics",
+      "pattern" : {
+        "active" : true,
+        "remote_cluster" : "intel",
+        "leader_index_patterns" : [
+          ".ds-metrics-*"
+        ],
+        "leader_index_exclusion_patterns" : [ ],
+        "follow_index_pattern" : "{{leader_index}}"
+      }
+    }
+  ]
+}

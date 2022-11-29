@@ -1,0 +1,35 @@
+#The following instructions are used for promoting CCR followers to regular data stream or indices so that they can be written.
+##Step1. Pause auto_follow patterns
+###Pause follow remote cluster [intel]
+POST /_ccr/auto_follow/logs/pause
+POST /_ccr/auto_follow/metrics/pause
+###Pause follow remote cluster [arm]
+POST /_ccr/auto_follow/test/pause
+##Step2. Promote data streams
+###Stop follow remote cluster [arm]
+POST /_data_stream/_promote/logs-apache.access-default
+POST /_data_stream/_promote/logs-mysql.error-default
+###Stop follow remote cluster [intel]
+POST /_data_stream/_promote/logs-apache.error-default
+POST /_data_stream/_promote/logs-kafka.log-default
+POST /_data_stream/_promote/logs-nginx.access-default
+POST /_data_stream/_promote/logs-nginx.error-default
+POST /_data_stream/_promote/logs-redis.log-default
+POST /_data_stream/_promote/logs-system.auth-default
+###Stop follow remote cluster [new]
+POST /_data_stream/_promote/logs-mysql.slowlog-default
+##Step3. Promote indices (pause, close, unfollow, open)
+###Stop follow remote cluster [intel]
+POST /kibana_sample_data_ecommerce/_ccr/pause_follow/
+POST /kibana_sample_data_ecommerce/_close/
+POST /kibana_sample_data_ecommerce/_ccr/unfollow/
+POST /kibana_sample_data_ecommerce/_open/
+POST /kibana_sample_data_flights/_ccr/pause_follow/
+POST /kibana_sample_data_flights/_close/
+POST /kibana_sample_data_flights/_ccr/unfollow/
+POST /kibana_sample_data_flights/_open/
+###Stop follow remote cluster [new]
+POST /kibana_sample_data_logs/_ccr/pause_follow/
+POST /kibana_sample_data_logs/_close/
+POST /kibana_sample_data_logs/_ccr/unfollow/
+POST /kibana_sample_data_logs/_open/

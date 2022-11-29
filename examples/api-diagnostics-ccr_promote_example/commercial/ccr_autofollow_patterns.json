@@ -1,0 +1,16 @@
+{
+  "patterns" : [
+    {
+      "name" : "logs",
+      "pattern" : {
+        "active" : true,
+        "remote_cluster" : "intel",
+        "leader_index_patterns" : [
+          ".ds-logs-*"
+        ],
+        "leader_index_exclusion_patterns" : [ ],
+        "follow_index_pattern" : "{{leader_index}}"
+      }
+    }
+  ]
+}

@@ -1,0 +1,472 @@
+{
+  "auto_follow_stats" : {
+    "number_of_failed_follow_indices" : 992,
+    "number_of_failed_remote_cluster_state_requests" : 0,
+    "number_of_successful_follow_indices" : 15,
+    "recent_auto_follow_errors" : [
+      {
+        "leader_index" : "logs:.ds-logs-system.syslog-default-2022.11.27-000012",
+        "timestamp" : 1669678820007,
+        "auto_follow_exception" : {
+          "type" : "exception",
+          "reason" : "java.lang.IllegalArgumentException: cannot follow backing index [.ds-logs-system.syslog-default-2022.11.27-000012], because local data stream [logs-system.syslog-default] is no longer marked as replicated",
+          "caused_by" : {
+            "type" : "illegal_argument_exception",
+            "reason" : "cannot follow backing index [.ds-logs-system.syslog-default-2022.11.27-000012], because local data stream [logs-system.syslog-default] is no longer marked as replicated"
+          }
+        }
+      },
+      {
+        "leader_index" : "logs:.ds-logs-system.syslog-default-2022.11.27-000013",
+        "timestamp" : 1669678820007,
+        "auto_follow_exception" : {
+          "type" : "exception",
+          "reason" : "java.lang.IllegalArgumentException: cannot follow backing index [.ds-logs-system.syslog-default-2022.11.27-000013], because local data stream [logs-system.syslog-default] is no longer marked as replicated",
+          "caused_by" : {
+            "type" : "illegal_argument_exception",
+            "reason" : "cannot follow backing index [.ds-logs-system.syslog-default-2022.11.27-000013], because local data stream [logs-system.syslog-default] is no longer marked as replicated"
+          }
+        }
+      },
+      {
+        "leader_index" : "logs:.ds-logs-test-datastream-2022.11.28-000001",
+        "timestamp" : 1669678820007,
+        "auto_follow_exception" : {
+          "type" : "snapshot_restore_exception",
+          "reason" : "[_ccr_intel:_latest_/_latest_] cannot restore index [.ds-logs-test-datastream-2022.11.28-000001] because an open index with same name already exists in the cluster. Either close or delete the existing index or restore the index under a different name by providing a rename pattern and replacement name"
+        }
+      }
+    ],
+    "auto_followed_clusters" : [
+      {
+        "cluster_name" : "intel",
+        "time_since_last_check_millis" : 45615,
+        "last_seen_metadata_version" : 28558
+      }
+    ]
+  },
+  "follow_stats" : {
+    "indices" : [
+      {
+        "index" : ".ds-logs-apache.access-default-2022.11.27-000003",
+        "shards" : [
+          {
+            "remote_cluster" : "arm",
+            "leader_index" : ".ds-logs-apache.access-default-2022.11.27-000003",
+            "follower_index" : ".ds-logs-apache.access-default-2022.11.27-000003",
+            "shard_id" : 0,
+            "leader_global_checkpoint" : 4808221,
+            "leader_max_seq_no" : 4808221,
+            "follower_global_checkpoint" : 4808221,
+            "follower_max_seq_no" : 4808221,
+            "last_requested_seq_no" : 4808221,
+            "outstanding_read_requests" : 1,
+            "outstanding_write_requests" : 0,
+            "write_buffer_operation_count" : 0,
+            "write_buffer_size_in_bytes" : 0,
+            "follower_mapping_version" : 2,
+            "follower_settings_version" : 1,
+            "follower_aliases_version" : 1,
+            "total_read_time_millis" : 2983725,
+            "total_read_remote_exec_time_millis" : 2742423,
+            "successful_read_requests" : 4185,
+            "failed_read_requests" : 3,
+            "operations_read" : 4808222,
+            "bytes_read" : 10689303018,
+            "total_write_time_millis" : 662037,
+            "successful_write_requests" : 4185,
+            "failed_write_requests" : 0,
+            "operations_written" : 4808222,
+            "read_exceptions" : [ ],
+            "time_since_last_read_millis" : 28504
+          }
+        ]
+      },
+      {
+        "index" : ".ds-logs-apache.error-default-2022.11.27-000002",
+        "shards" : [
+          {
+            "remote_cluster" : "intel",
+            "leader_index" : ".ds-logs-apache.error-default-2022.11.27-000002",
+            "follower_index" : ".ds-logs-apache.error-default-2022.11.27-000002",
+            "shard_id" : 0,
+            "leader_global_checkpoint" : 2145609,
+            "leader_max_seq_no" : 2145609,
+            "follower_global_checkpoint" : 2145609,
+            "follower_max_seq_no" : 2145609,
+            "last_requested_seq_no" : 2145609,
+            "outstanding_read_requests" : 1,
+            "outstanding_write_requests" : 0,
+            "write_buffer_operation_count" : 0,
+            "write_buffer_size_in_bytes" : 0,
+            "follower_mapping_version" : 2,
+            "follower_settings_version" : 1,
+            "follower_aliases_version" : 1,
+            "total_read_time_millis" : 2804042,
+            "total_read_remote_exec_time_millis" : 2751982,
+            "successful_read_requests" : 2338,
+            "failed_read_requests" : 0,
+            "operations_read" : 2145610,
+            "bytes_read" : 4725567314,
+            "total_write_time_millis" : 278481,
+            "successful_write_requests" : 2338,
+            "failed_write_requests" : 0,
+            "operations_written" : 2145610,
+            "read_exceptions" : [ ],
+            "time_since_last_read_millis" : 4016
+          }
+        ]
+      },
+      {
+        "index" : ".ds-logs-kafka.log-default-2022.11.27-000002",
+        "shards" : [
+          {
+            "remote_cluster" : "intel",
+            "leader_index" : ".ds-logs-kafka.log-default-2022.11.27-000002",
+            "follower_index" : ".ds-logs-kafka.log-default-2022.11.27-000002",
+            "shard_id" : 0,
+            "leader_global_checkpoint" : 3641098,
+            "leader_max_seq_no" : 3641098,
+            "follower_global_checkpoint" : 3641098,
+            "follower_max_seq_no" : 3641098,
+            "last_requested_seq_no" : 3641098,
+            "outstanding_read_requests" : 1,
+            "outstanding_write_requests" : 0,
+            "write_buffer_operation_count" : 0,
+            "write_buffer_size_in_bytes" : 0,
+            "follower_mapping_version" : 4,
+            "follower_settings_version" : 1,
+            "follower_aliases_version" : 1,
+            "total_read_time_millis" : 2848468,
+            "total_read_remote_exec_time_millis" : 2714188,
+            "successful_read_requests" : 3826,
+            "failed_read_requests" : 1,
+            "operations_read" : 3641099,
+            "bytes_read" : 8217327137,
+            "total_write_time_millis" : 454507,
+            "successful_write_requests" : 3826,
+            "failed_write_requests" : 0,
+            "operations_written" : 3641099,
+            "read_exceptions" : [ ],
+            "time_since_last_read_millis" : 16121
+          }
+        ]
+      },
+      {
+        "index" : ".ds-logs-mysql.error-default-2022.11.27-000002",
+        "shards" : [
+          {
+            "remote_cluster" : "arm",
+            "leader_index" : ".ds-logs-mysql.error-default-2022.11.27-000002",
+            "follower_index" : ".ds-logs-mysql.error-default-2022.11.27-000002",
+            "shard_id" : 0,
+            "leader_global_checkpoint" : 1988219,
+            "leader_max_seq_no" : 1988219,
+            "follower_global_checkpoint" : 1988219,
+            "follower_max_seq_no" : 1988219,
+            "last_requested_seq_no" : 1988219,
+            "outstanding_read_requests" : 1,
+            "outstanding_write_requests" : 0,
+            "write_buffer_operation_count" : 0,
+            "write_buffer_size_in_bytes" : 0,
+            "follower_mapping_version" : 2,
+            "follower_settings_version" : 1,
+            "follower_aliases_version" : 1,
+            "total_read_time_millis" : 2985993,
+            "total_read_remote_exec_time_millis" : 2778876,
+            "successful_read_requests" : 2384,
+            "failed_read_requests" : 3,
+            "operations_read" : 1988220,
+            "bytes_read" : 4106960472,
+            "total_write_time_millis" : 223056,
+            "successful_write_requests" : 2384,
+            "failed_write_requests" : 0,
+            "operations_written" : 1988220,
+            "read_exceptions" : [ ],
+            "time_since_last_read_millis" : 5882
+          }
+        ]
+      },
+      {
+        "index" : ".ds-logs-mysql.slowlog-default-2022.11.27-000002",
+        "shards" : [
+          {
+            "remote_cluster" : "new",
+            "leader_index" : ".ds-logs-mysql.slowlog-default-2022.11.27-000002",
+            "follower_index" : ".ds-logs-mysql.slowlog-default-2022.11.27-000002",
+            "shard_id" : 0,
+            "leader_global_checkpoint" : 2770022,
+            "leader_max_seq_no" : 2770022,
+            "follower_global_checkpoint" : 2770022,
+            "follower_max_seq_no" : 2770022,
+            "last_requested_seq_no" : 2770022,
+            "outstanding_read_requests" : 1,
+            "outstanding_write_requests" : 0,
+            "write_buffer_operation_count" : 0,
+            "write_buffer_size_in_bytes" : 0,
+            "follower_mapping_version" : 2,
+            "follower_settings_version" : 1,
+            "follower_aliases_version" : 1,
+            "total_read_time_millis" : 2925274,
+            "total_read_remote_exec_time_millis" : 2734131,
+            "successful_read_requests" : 3064,
+            "failed_read_requests" : 3,
+            "operations_read" : 2770023,
+            "bytes_read" : 7582720326,
+            "total_write_time_millis" : 319818,
+            "successful_write_requests" : 3064,
+            "failed_write_requests" : 0,
+            "operations_written" : 2770023,
+            "read_exceptions" : [ ],
+            "time_since_last_read_millis" : 6083
+          }
+        ]
+      },
+      {
+        "index" : ".ds-logs-nginx.access-default-2022.11.27-000009",
+        "shards" : [
+          {
+            "remote_cluster" : "intel",
+            "leader_index" : ".ds-logs-nginx.access-default-2022.11.27-000009",
+            "follower_index" : ".ds-logs-nginx.access-default-2022.11.27-000009",
+            "shard_id" : 0,
+            "leader_global_checkpoint" : 1992684,
+            "leader_max_seq_no" : 1992684,
+            "follower_global_checkpoint" : 1992684,
+            "follower_max_seq_no" : 1992684,
+            "last_requested_seq_no" : 1992684,
+            "outstanding_read_requests" : 1,
+            "outstanding_write_requests" : 0,
+            "write_buffer_operation_count" : 0,
+            "write_buffer_size_in_bytes" : 0,
+            "follower_mapping_version" : 3,
+            "follower_settings_version" : 1,
+            "follower_aliases_version" : 1,
+            "total_read_time_millis" : 743143,
+            "total_read_remote_exec_time_millis" : 600908,
+            "successful_read_requests" : 1116,
+            "failed_read_requests" : 2,
+            "operations_read" : 1992685,
+            "bytes_read" : 3910113738,
+            "total_write_time_millis" : 228994,
+            "successful_write_requests" : 1116,
+            "failed_write_requests" : 0,
+            "operations_written" : 1992685,
+            "read_exceptions" : [ ],
+            "time_since_last_read_millis" : 6077
+          }
+        ]
+      },
+      {
+        "index" : ".ds-logs-nginx.error-default-2022.11.27-000002",
+        "shards" : [
+          {
+            "remote_cluster" : "intel",
+            "leader_index" : ".ds-logs-nginx.error-default-2022.11.27-000002",
+            "follower_index" : ".ds-logs-nginx.error-default-2022.11.27-000002",
+            "shard_id" : 0,
+            "leader_global_checkpoint" : 1942728,
+            "leader_max_seq_no" : 1942728,
+            "follower_global_checkpoint" : 1942728,
+            "follower_max_seq_no" : 1942728,
+            "last_requested_seq_no" : 1942728,
+            "outstanding_read_requests" : 1,
+            "outstanding_write_requests" : 0,
+            "write_buffer_operation_count" : 0,
+            "write_buffer_size_in_bytes" : 0,
+            "follower_mapping_version" : 4,
+            "follower_settings_version" : 1,
+            "follower_aliases_version" : 1,
+            "total_read_time_millis" : 2857079,
+            "total_read_remote_exec_time_millis" : 2761035,
+            "successful_read_requests" : 2181,
+            "failed_read_requests" : 1,
+            "operations_read" : 1942729,
+            "bytes_read" : 4096931422,
+            "total_write_time_millis" : 282367,
+            "successful_write_requests" : 2181,
+            "failed_write_requests" : 0,
+            "operations_written" : 1942729,
+            "read_exceptions" : [ ],
+            "time_since_last_read_millis" : 16121
+          }
+        ]
+      },
+      {
+        "index" : ".ds-logs-redis.log-default-2022.11.27-000003",
+        "shards" : [
+          {
+            "remote_cluster" : "intel",
+            "leader_index" : ".ds-logs-redis.log-default-2022.11.27-000003",
+            "follower_index" : ".ds-logs-redis.log-default-2022.11.27-000003",
+            "shard_id" : 0,
+            "leader_global_checkpoint" : 7454927,
+            "leader_max_seq_no" : 7454927,
+            "follower_global_checkpoint" : 7454927,
+            "follower_max_seq_no" : 7454927,
+            "last_requested_seq_no" : 7454927,
+            "outstanding_read_requests" : 1,
+            "outstanding_write_requests" : 0,
+            "write_buffer_operation_count" : 0,
+            "write_buffer_size_in_bytes" : 0,
+            "follower_mapping_version" : 2,
+            "follower_settings_version" : 1,
+            "follower_aliases_version" : 1,
+            "total_read_time_millis" : 2863775,
+            "total_read_remote_exec_time_millis" : 2636819,
+            "successful_read_requests" : 5339,
+            "failed_read_requests" : 1,
+            "operations_read" : 7454928,
+            "bytes_read" : 15145410523,
+            "total_write_time_millis" : 916448,
+            "successful_write_requests" : 5339,
+            "failed_write_requests" : 0,
+            "operations_written" : 7454928,
+            "read_exceptions" : [ ],
+            "time_since_last_read_millis" : 50865
+          }
+        ]
+      },
+      {
+        "index" : ".ds-logs-system.auth-default-2022.11.27-000006",
+        "shards" : [
+          {
+            "remote_cluster" : "intel",
+            "leader_index" : ".ds-logs-system.auth-default-2022.11.27-000006",
+            "follower_index" : ".ds-logs-system.auth-default-2022.11.27-000006",
+            "shard_id" : 0,
+            "leader_global_checkpoint" : 3489320,
+            "leader_max_seq_no" : 3489320,
+            "follower_global_checkpoint" : 3489320,
+            "follower_max_seq_no" : 3489320,
+            "last_requested_seq_no" : 3489320,
+            "outstanding_read_requests" : 1,
+            "outstanding_write_requests" : 0,
+            "write_buffer_operation_count" : 0,
+            "write_buffer_size_in_bytes" : 0,
+            "follower_mapping_version" : 3,
+            "follower_settings_version" : 1,
+            "follower_aliases_version" : 1,
+            "total_read_time_millis" : 1195832,
+            "total_read_remote_exec_time_millis" : 1125550,
+            "successful_read_requests" : 1057,
+            "failed_read_requests" : 0,
+            "operations_read" : 3489321,
+            "bytes_read" : 6028773972,
+            "total_write_time_millis" : 408801,
+            "successful_write_requests" : 1057,
+            "failed_write_requests" : 0,
+            "operations_written" : 3489321,
+            "read_exceptions" : [ ],
+            "time_since_last_read_millis" : 40908
+          }
+        ]
+      },
+      {
+        "index" : "kibana_sample_data_ecommerce",
+        "shards" : [
+          {
+            "remote_cluster" : "intel",
+            "leader_index" : "kibana_sample_data_ecommerce",
+            "follower_index" : "kibana_sample_data_ecommerce",
+            "shard_id" : 0,
+            "leader_global_checkpoint" : 4674,
+            "leader_max_seq_no" : 4674,
+            "follower_global_checkpoint" : 4674,
+            "follower_max_seq_no" : 4674,
+            "last_requested_seq_no" : 4674,
+            "outstanding_read_requests" : 1,
+            "outstanding_write_requests" : 0,
+            "write_buffer_operation_count" : 0,
+            "write_buffer_size_in_bytes" : 0,
+            "follower_mapping_version" : 1,
+            "follower_settings_version" : 1,
+            "follower_aliases_version" : 1,
+            "total_read_time_millis" : 130,
+            "total_read_remote_exec_time_millis" : 26,
+            "successful_read_requests" : 1,
+            "failed_read_requests" : 0,
+            "operations_read" : 4675,
+            "bytes_read" : 8292751,
+            "total_write_time_millis" : 2425,
+            "successful_write_requests" : 1,
+            "failed_write_requests" : 0,
+            "operations_written" : 4675,
+            "read_exceptions" : [ ],
+            "time_since_last_read_millis" : 53056
+          }
+        ]
+      },
+      {
+        "index" : "kibana_sample_data_flights",
+        "shards" : [
+          {
+            "remote_cluster" : "intel",
+            "leader_index" : "kibana_sample_data_flights",
+            "follower_index" : "kibana_sample_data_flights",
+            "shard_id" : 0,
+            "leader_global_checkpoint" : 13058,
+            "leader_max_seq_no" : 13058,
+            "follower_global_checkpoint" : 13058,
+            "follower_max_seq_no" : 13058,
+            "last_requested_seq_no" : 13058,
+            "outstanding_read_requests" : 1,
+            "outstanding_write_requests" : 0,
+            "write_buffer_operation_count" : 0,
+            "write_buffer_size_in_bytes" : 0,
+            "follower_mapping_version" : 1,
+            "follower_settings_version" : 1,
+            "follower_aliases_version" : 1,
+            "total_read_time_millis" : 229,
+            "total_read_remote_exec_time_millis" : 50,
+            "successful_read_requests" : 3,
+            "failed_read_requests" : 0,
+            "operations_read" : 13059,
+            "bytes_read" : 11209667,
+            "total_write_time_millis" : 2904,
+            "successful_write_requests" : 3,
+            "failed_write_requests" : 0,
+            "operations_written" : 13059,
+            "read_exceptions" : [ ],
+            "time_since_last_read_millis" : 6757
+          }
+        ]
+      },
+      {
+        "index" : "kibana_sample_data_logs",
+        "shards" : [
+          {
+            "remote_cluster" : "new",
+            "leader_index" : "kibana_sample_data_logs",
+            "follower_index" : "kibana_sample_data_logs",
+            "shard_id" : 0,
+            "leader_global_checkpoint" : 14073,
+            "leader_max_seq_no" : 14073,
+            "follower_global_checkpoint" : 14073,
+            "follower_max_seq_no" : 14073,
+            "last_requested_seq_no" : 14073,
+            "outstanding_read_requests" : 1,
+            "outstanding_write_requests" : 0,
+            "write_buffer_operation_count" : 0,
+            "write_buffer_size_in_bytes" : 0,
+            "follower_mapping_version" : 2,
+            "follower_settings_version" : 1,
+            "follower_aliases_version" : 1,
+            "total_read_time_millis" : 268,
+            "total_read_remote_exec_time_millis" : 54,
+            "successful_read_requests" : 3,
+            "failed_read_requests" : 0,
+            "operations_read" : 14074,
+            "bytes_read" : 14356028,
+            "total_write_time_millis" : 3818,
+            "successful_write_requests" : 3,
+            "failed_write_requests" : 0,
+            "operations_written" : 14074,
+            "read_exceptions" : [ ],
+            "time_since_last_read_millis" : 48126
+          }
+        ]
+      }
+    ]
+  }
+}

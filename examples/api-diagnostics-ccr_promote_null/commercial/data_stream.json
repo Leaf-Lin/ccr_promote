@@ -1,0 +1,414 @@
+{
+  "data_streams" : [
+    {
+      "name" : ".logs-deprecation.elasticsearch-default",
+      "timestamp_field" : {
+        "name" : "@timestamp"
+      },
+      "indices" : [
+        {
+          "index_name" : ".ds-.logs-deprecation.elasticsearch-default-2022.11.27-000001",
+          "index_uuid" : "a3b5dvisTF6jbKLAYQWz9w"
+        }
+      ],
+      "generation" : 1,
+      "_meta" : {
+        "description" : "default template for Stack deprecation logs index template installed by x-pack",
+        "managed" : true
+      },
+      "status" : "GREEN",
+      "template" : ".deprecation-indexing-template",
+      "ilm_policy" : ".deprecation-indexing-ilm-policy",
+      "hidden" : true,
+      "system" : false,
+      "allow_custom_routing" : false,
+      "replicated" : false
+    },
+    {
+      "name" : ".slm-history-5",
+      "timestamp_field" : {
+        "name" : "@timestamp"
+      },
+      "indices" : [
+        {
+          "index_name" : ".ds-.slm-history-5-2022.11.27-000001",
+          "index_uuid" : "UTwk2mrYQH-BUaGS74JYPw"
+        }
+      ],
+      "generation" : 1,
+      "_meta" : {
+        "description" : "index template for SLM history indices",
+        "managed" : true
+      },
+      "status" : "GREEN",
+      "template" : ".slm-history",
+      "ilm_policy" : "slm-history-ilm-policy",
+      "hidden" : true,
+      "system" : false,
+      "allow_custom_routing" : false,
+      "replicated" : false
+    },
+    {
+      "name" : "ilm-history-5",
+      "timestamp_field" : {
+        "name" : "@timestamp"
+      },
+      "indices" : [
+        {
+          "index_name" : ".ds-ilm-history-5-2022.11.27-000001",
+          "index_uuid" : "QekuZ4IIQjmSjLRCZNWF7g"
+        }
+      ],
+      "generation" : 1,
+      "_meta" : {
+        "description" : "index template for ILM history indices",
+        "managed" : true
+      },
+      "status" : "GREEN",
+      "template" : "ilm-history",
+      "ilm_policy" : "ilm-history-ilm-policy",
+      "hidden" : true,
+      "system" : false,
+      "allow_custom_routing" : false,
+      "replicated" : false
+    },
+    {
+      "name" : "logs-apache.access-default",
+      "timestamp_field" : {
+        "name" : "@timestamp"
+      },
+      "indices" : [
+        {
+          "index_name" : ".ds-logs-apache.access-default-2022.11.27-000003",
+          "index_uuid" : "oxZxN5_aTS-HZPjVkHTShA"
+        }
+      ],
+      "generation" : 3,
+      "_meta" : {
+        "package" : {
+          "name" : "apache"
+        },
+        "managed_by" : "ingest-manager",
+        "managed" : true
+      },
+      "status" : "GREEN",
+      "template" : "logs",
+      "ilm_policy" : "logs",
+      "hidden" : false,
+      "system" : false,
+      "allow_custom_routing" : false,
+      "replicated" : false
+    },
+    {
+      "name" : "logs-apache.error-default",
+      "timestamp_field" : {
+        "name" : "@timestamp"
+      },
+      "indices" : [
+        {
+          "index_name" : ".ds-logs-apache.error-default-2022.11.27-000002",
+          "index_uuid" : "fidHDWPBTKCeiA2dHeit0A"
+        }
+      ],
+      "generation" : 2,
+      "_meta" : {
+        "package" : {
+          "name" : "apache"
+        },
+        "managed_by" : "ingest-manager",
+        "managed" : true
+      },
+      "status" : "GREEN",
+      "template" : "logs",
+      "ilm_policy" : "logs",
+      "hidden" : false,
+      "system" : false,
+      "allow_custom_routing" : false,
+      "replicated" : false
+    },
+    {
+      "name" : "logs-kafka.log-default",
+      "timestamp_field" : {
+        "name" : "@timestamp"
+      },
+      "indices" : [
+        {
+          "index_name" : ".ds-logs-kafka.log-default-2022.11.27-000002",
+          "index_uuid" : "LnrYSK5YQVuxWl2bqNKizA"
+        }
+      ],
+      "generation" : 2,
+      "_meta" : {
+        "package" : {
+          "name" : "kafka"
+        },
+        "managed_by" : "ingest-manager",
+        "managed" : true
+      },
+      "status" : "GREEN",
+      "template" : "logs",
+      "ilm_policy" : "logs",
+      "hidden" : false,
+      "system" : false,
+      "allow_custom_routing" : false,
+      "replicated" : true
+    },
+    {
+      "name" : "logs-mysql.error-default",
+      "timestamp_field" : {
+        "name" : "@timestamp"
+      },
+      "indices" : [
+        {
+          "index_name" : ".ds-logs-mysql.error-default-2022.11.27-000002",
+          "index_uuid" : "oAcpPBtwSoCI-ZRlIkbX5A"
+        }
+      ],
+      "generation" : 2,
+      "_meta" : {
+        "package" : {
+          "name" : "mysql"
+        },
+        "managed_by" : "ingest-manager",
+        "managed" : true
+      },
+      "status" : "GREEN",
+      "template" : "logs",
+      "ilm_policy" : "logs",
+      "hidden" : false,
+      "system" : false,
+      "allow_custom_routing" : false,
+      "replicated" : true
+    },
+    {
+      "name" : "logs-mysql.slowlog-default",
+      "timestamp_field" : {
+        "name" : "@timestamp"
+      },
+      "indices" : [
+        {
+          "index_name" : ".ds-logs-mysql.slowlog-default-2022.11.27-000002",
+          "index_uuid" : "Z2IwoKGDR0egacZK0a4asA"
+        }
+      ],
+      "generation" : 2,
+      "_meta" : {
+        "package" : {
+          "name" : "mysql"
+        },
+        "managed_by" : "ingest-manager",
+        "managed" : true
+      },
+      "status" : "GREEN",
+      "template" : "logs",
+      "ilm_policy" : "logs",
+      "hidden" : false,
+      "system" : false,
+      "allow_custom_routing" : false,
+      "replicated" : true
+    },
+    {
+      "name" : "logs-nginx.access-default",
+      "timestamp_field" : {
+        "name" : "@timestamp"
+      },
+      "indices" : [
+        {
+          "index_name" : ".ds-logs-nginx.access-default-2022.11.27-000007",
+          "index_uuid" : "RJKiyW7NTxq59DJGVpbsTg"
+        },
+        {
+          "index_name" : ".ds-logs-nginx.access-default-2022.11.27-000008",
+          "index_uuid" : "jb9Ot9D6QIWaSLqaQjUCwA"
+        },
+        {
+          "index_name" : ".ds-logs-nginx.access-default-2022.11.27-000009",
+          "index_uuid" : "VdpESsA_QXOOMAsh0QMgSA"
+        }
+      ],
+      "generation" : 9,
+      "_meta" : {
+        "package" : {
+          "name" : "nginx"
+        },
+        "managed_by" : "ingest-manager",
+        "managed" : true
+      },
+      "status" : "GREEN",
+      "template" : "logs",
+      "ilm_policy" : "logs",
+      "hidden" : false,
+      "system" : false,
+      "allow_custom_routing" : false,
+      "replicated" : true
+    },
+    {
+      "name" : "logs-nginx.error-default",
+      "timestamp_field" : {
+        "name" : "@timestamp"
+      },
+      "indices" : [
+        {
+          "index_name" : ".ds-logs-nginx.error-default-2022.11.27-000002",
+          "index_uuid" : "8mEf3pT6TYCLUvXhcMSPOA"
+        }
+      ],
+      "generation" : 2,
+      "_meta" : {
+        "package" : {
+          "name" : "nginx"
+        },
+        "managed_by" : "ingest-manager",
+        "managed" : true
+      },
+      "status" : "GREEN",
+      "template" : "logs",
+      "ilm_policy" : "logs",
+      "hidden" : false,
+      "system" : false,
+      "allow_custom_routing" : false,
+      "replicated" : true
+    },
+    {
+      "name" : "logs-redis.log-default",
+      "timestamp_field" : {
+        "name" : "@timestamp"
+      },
+      "indices" : [
+        {
+          "index_name" : ".ds-logs-redis.log-default-2022.11.24-000001",
+          "index_uuid" : "2h5DnC3IRqu806ciqaPFNg"
+        },
+        {
+          "index_name" : ".ds-logs-redis.log-default-2022.11.27-000003",
+          "index_uuid" : "Bl6RFYW1TYqJcW7eCjmTiQ"
+        }
+      ],
+      "generation" : 3,
+      "_meta" : {
+        "package" : {
+          "name" : "redis"
+        },
+        "managed_by" : "ingest-manager",
+        "managed" : true
+      },
+      "status" : "YELLOW",
+      "template" : "logs",
+      "ilm_policy" : "logs",
+      "hidden" : false,
+      "system" : false,
+      "allow_custom_routing" : false,
+      "replicated" : true
+    },
+    {
+      "name" : "logs-system.auth-default",
+      "timestamp_field" : {
+        "name" : "@timestamp"
+      },
+      "indices" : [
+        {
+          "index_name" : ".ds-logs-system.auth-default-2022.11.27-000005",
+          "index_uuid" : "x_XC59IZSmq7DL2vJMNKRw"
+        },
+        {
+          "index_name" : ".ds-logs-system.auth-default-2022.11.27-000006",
+          "index_uuid" : "9HtHNimEQ0-HJ5RoNKRfqA"
+        }
+      ],
+      "generation" : 6,
+      "_meta" : {
+        "package" : {
+          "name" : "system"
+        },
+        "managed_by" : "ingest-manager",
+        "managed" : true
+      },
+      "status" : "GREEN",
+      "template" : "logs",
+      "ilm_policy" : "logs",
+      "hidden" : false,
+      "system" : false,
+      "allow_custom_routing" : false,
+      "replicated" : true
+    },
+    {
+      "name" : "logs-system.syslog-default",
+      "timestamp_field" : {
+        "name" : "@timestamp"
+      },
+      "indices" : [
+        {
+          "index_name" : ".ds-logs-system.syslog-default-2022.11.27-000010",
+          "index_uuid" : "aYrheqabRMq-KXrkO5w6cQ"
+        },
+        {
+          "index_name" : ".ds-logs-system.syslog-default-2022.11.27-000011",
+          "index_uuid" : "l5pqfkdKRVuqOiJjlIE2aQ"
+        }
+      ],
+      "generation" : 11,
+      "_meta" : {
+        "package" : {
+          "name" : "system"
+        },
+        "managed_by" : "ingest-manager",
+        "managed" : true
+      },
+      "status" : "GREEN",
+      "template" : "logs",
+      "ilm_policy" : "logs",
+      "hidden" : false,
+      "system" : false,
+      "allow_custom_routing" : false,
+      "replicated" : false
+    },
+    {
+      "name" : "logs-test-ccr",
+      "timestamp_field" : {
+        "name" : "@timestamp"
+      },
+      "indices" : [
+        {
+          "index_name" : ".ds-logs-test-ccr-2022.11.28-000001",
+          "index_uuid" : "jwdiJsPjSYCY0omUV2ctYg"
+        }
+      ],
+      "generation" : 1,
+      "_meta" : {
+        "description" : "default logs template installed by x-pack",
+        "managed" : true
+      },
+      "status" : "GREEN",
+      "template" : "logs",
+      "ilm_policy" : "logs",
+      "hidden" : false,
+      "system" : false,
+      "allow_custom_routing" : false,
+      "replicated" : false
+    },
+    {
+      "name" : "logs-test-datastream",
+      "timestamp_field" : {
+        "name" : "@timestamp"
+      },
+      "indices" : [
+        {
+          "index_name" : ".ds-logs-test-datastream-2022.11.28-000001",
+          "index_uuid" : "urjSCpLKS3-LyXT9rEf5lQ"
+        }
+      ],
+      "generation" : 1,
+      "_meta" : {
+        "description" : "default logs template installed by x-pack",
+        "managed" : true
+      },
+      "status" : "GREEN",
+      "template" : "logs",
+      "ilm_policy" : "logs",
+      "hidden" : false,
+      "system" : false,
+      "allow_custom_routing" : false,
+      "replicated" : false
+    }
+  ]
+}

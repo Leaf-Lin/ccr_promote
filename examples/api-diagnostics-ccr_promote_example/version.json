@@ -1,0 +1,17 @@
+{
+  "name" : "instance-0000000001",
+  "cluster_name" : "fed63088940943798e8e2695e46f03f2",
+  "cluster_uuid" : "lIDH8_chQ--86k50SEpgQw",
+  "version" : {
+    "number" : "8.6.0",
+    "build_flavor" : "default",
+    "build_type" : "docker",
+    "build_hash" : "ad182b0d75b4d25345a3fd06b0f76d86fc855f6d",
+    "build_date" : "2022-11-24T09:35:12.519299832Z",
+    "build_snapshot" : false,
+    "lucene_version" : "9.4.2",
+    "minimum_wire_compatibility_version" : "7.17.0",
+    "minimum_index_compatibility_version" : "7.0.0"
+  },
+  "tagline" : "You Know, for Search"
+}
