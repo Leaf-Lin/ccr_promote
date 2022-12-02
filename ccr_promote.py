@@ -197,19 +197,22 @@ def get_ccr_follower(diagnostics,ccr_follow_indices):
 
 
 
-def build_instructions(diagnostics, ccr_autofollow_patterns, ccr_data_streams, ccr_indices, leader):
+def build_instructions(diagnostics, ccr_follow_indices, ccr_autofollow_patterns, ccr_data_streams, ccr_indices, leader):
 
 
-    instruction = 'The following instructions are used for promoting CCR followers to regular data stream or indices so that they can be written.'
+
+    instruction = ' The following instructions are used for promoting CCR followers to regular data stream or indices so that they can be written.'
     diagnostics.add_comment(instruction)
 
+
+
     if len(ccr_autofollow_patterns)>0:
-        instruction = '#Step1. Pause auto_follow patterns'
+        instruction = '#  Step1. Pause auto_follow patterns'
         diagnostics.add_comment(instruction)
         for remote_cluster in ccr_autofollow_patterns:
             if remote_cluster == leader or leader=='all':
                 if len(ccr_autofollow_patterns[remote_cluster])>0:
-                    instruction = '##Pause follow remote cluster [' + remote_cluster + ']'
+                    instruction = '## Pause follow remote cluster [' + remote_cluster + ']'
                     diagnostics.add_comment(instruction)
                     for pattern in ccr_autofollow_patterns[remote_cluster]:
                         api_auto_follow_pause = 'POST /_ccr/auto_follow/' + pattern + '/pause'
@@ -217,12 +220,12 @@ def build_instructions(diagnostics, ccr_autofollow_patterns, ccr_data_streams, c
                         
 
     if len(ccr_data_streams)>0:
-        instruction = '#Step2. Promote data streams'
+        instruction = '#  Step2. Promote data streams'
         diagnostics.add_comment(instruction)
         for remote_cluster in ccr_data_streams:
             if remote_cluster == leader or leader=='all':
                 if len(ccr_data_streams[remote_cluster])>0:
-                    instruction = '##Stop follow remote cluster [' + remote_cluster + ']'
+                    instruction = '## Stop follow remote cluster [' + remote_cluster + ']'
                     diagnostics.add_comment(instruction)
                     for data_stream in ccr_data_streams[remote_cluster]:
                         api_promote = 'POST /_data_stream/_promote/' + data_stream 
@@ -231,12 +234,12 @@ def build_instructions(diagnostics, ccr_autofollow_patterns, ccr_data_streams, c
                         diagnostics.add_api(api_promote)
 
     if len(ccr_indices)>0:
-        instruction = '#Step3. Promote indices (pause, close, unfollow, open)'
+        instruction = '#  Step3. Promote indices (pause, close, unfollow, open)'
         diagnostics.add_comment(instruction)
         for remote_cluster in ccr_indices:
             if remote_cluster == leader or leader=='all':
                 if len(ccr_indices[remote_cluster])>0:
-                    instruction = '##Stop follow remote cluster [' + remote_cluster + ']'
+                    instruction = '## Stop follow remote cluster [' + remote_cluster + ']'
                     diagnostics.add_comment(instruction)
                     for index in ccr_indices[remote_cluster]:
                         api_pause = 'POST /' + index + '/_ccr/pause_follow/'
@@ -247,6 +250,20 @@ def build_instructions(diagnostics, ccr_autofollow_patterns, ccr_data_streams, c
                         diagnostics.add_api(api_close)
                         diagnostics.add_api(api_unfollow)
                         diagnostics.add_api(api_open)
+
+
+    if len(ccr_follow_indices)>0:
+        instruction = '###############################################################################\n'
+        instruction += '##  Listing all indices promoted'
+        diagnostics.add_comment(instruction)
+        for remote_cluster in ccr_follow_indices:
+            if remote_cluster == leader or leader=='all':
+                if len(ccr_follow_indices[remote_cluster])>0:
+                    instruction = '## From remote cluster [' + remote_cluster + ']'
+                    diagnostics.add_comment(instruction)
+                    for index in ccr_follow_indices[remote_cluster]:
+                        instruction = index 
+                        diagnostics.add_api(instruction)
 
 
 
@@ -293,7 +310,7 @@ def main():
 
     if ccr_follow_indices:
         (ccr_data_streams, ccr_indices)=get_ccr_follower(diagnostics,ccr_follow_indices)
-        build_instructions(diagnostics, ccr_autofollow_patterns,ccr_data_streams, ccr_indices, leader)
+        build_instructions(diagnostics, ccr_follow_indices, ccr_autofollow_patterns,ccr_data_streams, ccr_indices, leader)
         file_name = "promote-" + diagnostics.version['cluster_name'] + (".txt")
         write_instructions_to_file(diagnostics, diagnostic_bundle_root, file_name)
     else:
