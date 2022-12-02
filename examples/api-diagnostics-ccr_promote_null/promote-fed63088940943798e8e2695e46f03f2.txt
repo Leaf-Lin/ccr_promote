@@ -1,9 +1,0 @@
-#The following instructions are used for promoting CCR followers to regular data stream or indices so that they can be written.
-##Step1. Pause auto_follow patterns
-###Pause follow remote cluster [arm]
-POST /_ccr/auto_follow/test/pause
-##Step2. Promote data streams
-###Stop follow remote cluster [arm]
-POST /_data_stream/_promote/logs-apache.access-default
-POST /_data_stream/_promote/logs-mysql.error-default
-##Step3. Promote indices (pause, close, unfollow, open)

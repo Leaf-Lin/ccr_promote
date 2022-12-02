@@ -11,6 +11,7 @@ If your ccr cluster contains follower from several different leader cluster, you
 - Step1. Pause auto_follow patterns
 - Step2. Promote data streams
 - Step3. Promote indices (pause, close, unfollow, open)
+- Additionally, it prints all indices promotes (for reference)
 
 ## Prerequisites
 - Python3 (tested with Python version 3.x):
@@ -22,24 +23,38 @@ If your ccr cluster contains follower from several different leader cluster, you
 
 ## Script usage
 ```
-usage: ccr_promote.py [-h] [-l LEADER] path_to_diagnostics
+usage: ccr_promote.py [-h] (-d diagnostics | -f FOLLOWER) [-l LEADER] [--execute]
 
-Build required APIs to promote ccr followers
-
-positional arguments:
-  path_to_diagnostics   path to the unzipped Elasticsearch support diagnostics bundle
+Build required APIs to promote ccr followers.
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -l LEADER, --leader LEADER
-                        Specify specific leader cluster for promoting.
+  -h, --help      show this help message and exit
+  -d diagnostics  path to the unzipped Elasticsearch support diagnostics bundle
+  -f FOLLOWER     specify follower cluster endpoint, ie https://es_endpoint:9200
+  -l LEADER       specify name of the remote cluster (leader) currently experience downtime. If not specified, it will operate on follower indices from all remote clusters.
+  --execute       Without this flag, instructions will be printed to a file. You need to specify this flag to execute commands directly to the follower cluster when -f is used.
 ```
 
 ## Running the script
 
-- To Run: `python3 ccr_promote.py -h`
-- To Run: `python3 ccr_promote.py [path_to_diag]/api-diagnostics-ccr_promote_test`
-- To Run: `python3 ccr_promote.py [path_to_diag]/api-diagnostics-ccr_promote_test -l [leader_cluster]`
+- To get script usage:
+```
+python3 ccr_promote.py -h
+```
+
+- To Run with a remote cluster:
+```
+python3 ccr_promote.py -f [https://es_endpoint:9200]
+python3 ccr_promote.py -f [https://es_endpoint:9200] --execute
+python3 ccr_promote.py -f [https://es_endpoint:9200] -l [leader_cluster]
+python3 ccr_promote.py -f [https://es_endpoint:9200] -l [leader_cluster] --execute
+```
+
+-   To Run with a diagnostics bundle:
+```
+python3 ccr_promote.py [path_to_diag/api-diagnostics-ccr_promote_test0]
+python3 ccr_promote.py [path_to_diag/api-diagnostics-ccr_promote_test0] -l [leader_cluster]
+```
 
 - Diagnostics (Input) can be generated from https://github.com/elastic/support-diagnostics
   - Several input files are available in the examples folder.

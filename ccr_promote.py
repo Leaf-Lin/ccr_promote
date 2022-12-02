@@ -20,8 +20,8 @@
 #
 #
 #   To Run with a diagnostics bundle:
-#     python3 ccr_promote.py [path_to_diag]/api-diagnostics-ccr_promote_test0
-#     python3 ccr_promote.py [path_to_diag]/api-diagnostics-ccr_promote_test0 -l [leader_cluster]
+#     python3 ccr_promote.py [path_to_diag/api-diagnostics-ccr_promote_test0]
+#     python3 ccr_promote.py [path_to_diag/api-diagnostics-ccr_promote_test0] -l [leader_cluster]
 #
 #   Diagnostics (Input) can be generated from https://github.com/elastic/support-diagnostics
 #
@@ -79,7 +79,7 @@ class DiagnosticsData:
         self.instructions.append({'type': 'api', 'text': api})
 
 
-def load_diagnostics(path,is_commercial):
+def load_diagnostics(path,subdir):
     diagnostics = DiagnosticsData()
 
 
@@ -91,15 +91,15 @@ def load_diagnostics(path,is_commercial):
 
         if cluster_version >= Version(ES_CCR_VERSION):
 
-            path_file = os.sep.join([path, is_commercial, DATA_STREAM_JSON])
+            path_file = os.sep.join([path, subdir, DATA_STREAM_JSON])
             with open(path_file) as f:
                 diagnostics.data_stream = json.load(f)
 
-            path_file = os.sep.join([path, is_commercial, CCR_STATS_JSON])
+            path_file = os.sep.join([path, subdir, CCR_STATS_JSON])
             with open(path_file) as f:
                 diagnostics.ccr_stats = json.load(f)
 
-            path_file = os.sep.join([path, is_commercial, CCR_AUTOFOLLOW_PATTERNS_JSON])
+            path_file = os.sep.join([path, subdir, CCR_AUTOFOLLOW_PATTERNS_JSON])
             with open(path_file) as f:
                 diagnostics.ccr_autofollow_patterns = json.load(f)
 
@@ -113,15 +113,17 @@ def load_diagnostics(path,is_commercial):
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description='Build required APIs to promote ccr followers')
-    parser.add_argument("-p", "--path", metavar='path_to_diagnostics',
-                        help="path to the unzipped Elasticsearch support diagnostics bundle")
-    parser.add_argument("-l", "--leader", default='all',
-                        help="Specify follower from specific leader cluster")
-    parser.add_argument("-f", "--follower", default='all',
-                        help="Specify follower cluster")
+    parser = argparse.ArgumentParser(prog='ccr_promote.py', description='Build required APIs to promote ccr followers.')
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('-d', dest='diag', metavar='diagnostics',
+                        help='path to the unzipped Elasticsearch support diagnostics bundle')
+    group.add_argument('-f', dest='follower', 
+                        help='specify follower cluster endpoint, ie https://es_endpoint:9200')
+    parser.add_argument('-l', dest='leader', default='all',
+                        help='specify name of the remote cluster (leader) currently experience downtime. If not specified, it will operate on follower indices from all remote clusters.')
+    parser.add_argument('--execute', action='store_true', help='Without this flag, instructions will be printed to a file. You can specify this flag to execute commands when -f is used.')
     args = parser.parse_args()
-    return args.path, args.leader, args.follower
+    return args.leader, args.follower, args.diag, args.execute
 
 def get_cred():
 
@@ -130,17 +132,22 @@ def get_cred():
 
     return user, password
 
-def exec_curl(user, password, follower, api, output):
+def exec_curl(user, password, follower, method, api, output):
 
-    os.system("curl -s -XGET -u " + user + ":" + password + " -o " + output + " " + follower + api + "?pretty")
+    if output:
+        os.system("curl -s -X" + method + " -u " + user + ":" + password + " -o " + output + " " + follower + api + "?pretty")
+    else:
+        print ('Running ' + method + ' ' + api)
+        os.system("curl -s -X" + method + " -u " + user + ":" + password + " " + follower + api )
+        print ('')
 
-def get_diagnostics(follower):
-    user,password = get_cred()
+def get_diagnostics(user,password,follower):
+    method = "GET"
 
-    exec_curl(user, password, follower,"/",VERSION_JSON)
-    exec_curl(user, password, follower,"/_ccr/stats",CCR_STATS_JSON)
-    exec_curl(user, password, follower,"/_data_stream",DATA_STREAM_JSON)
-    exec_curl(user, password, follower,"/_ccr/auto_follow",CCR_AUTOFOLLOW_PATTERNS_JSON)
+    exec_curl(user, password, follower, method, "/", VERSION_JSON)
+    exec_curl(user, password, follower, method, "/_ccr/stats", CCR_STATS_JSON)
+    exec_curl(user, password, follower, method, "/_data_stream", DATA_STREAM_JSON)
+    exec_curl(user, password, follower, method, "/_ccr/auto_follow", CCR_AUTOFOLLOW_PATTERNS_JSON)
 
 
 def get_ccr_autofollow_patterns(diagnostics):
@@ -221,6 +228,8 @@ def get_ccr_follower(diagnostics,ccr_follow_indices):
             logging.info(f'   - {len(ccr_indices[remote_cluster])} index followers')
 
 
+
+    logging.info('\n\n')
     return (ccr_data_streams, ccr_indices)
 
 
@@ -228,12 +237,13 @@ def get_ccr_follower(diagnostics,ccr_follow_indices):
 
 
 
-def build_instructions(diagnostics, ccr_follow_indices, ccr_autofollow_patterns, ccr_data_streams, ccr_indices, leader):
+def build_instructions(diagnostics, ccr_follow_indices, ccr_autofollow_patterns, ccr_data_streams, ccr_indices, leader, user, password, follower, execute):
 
 
 
     instruction = ' The following instructions are used for promoting CCR followers to regular data stream or indices so that they can be written.'
     diagnostics.add_comment(instruction)
+    method = 'POST'
 
 
 
@@ -246,8 +256,11 @@ def build_instructions(diagnostics, ccr_follow_indices, ccr_autofollow_patterns,
                     instruction = '## Pause follow remote cluster [' + remote_cluster + ']'
                     diagnostics.add_comment(instruction)
                     for pattern in ccr_autofollow_patterns[remote_cluster]:
-                        api_auto_follow_pause = 'POST /_ccr/auto_follow/' + pattern + '/pause'
-                        diagnostics.add_api(api_auto_follow_pause)
+                        api_auto_follow_pause = '/_ccr/auto_follow/' + pattern + '/pause'
+                        diagnostics.add_api(method + ' ' + api_auto_follow_pause)
+                        if execute:
+                            exec_curl(user, password, follower, method, api_auto_follow_pause, None)
+
                         
 
     if len(ccr_data_streams)>0:
@@ -259,10 +272,12 @@ def build_instructions(diagnostics, ccr_follow_indices, ccr_autofollow_patterns,
                     instruction = '## Stop follow remote cluster [' + remote_cluster + ']'
                     diagnostics.add_comment(instruction)
                     for data_stream in ccr_data_streams[remote_cluster]:
-                        api_promote = 'POST /_data_stream/_promote/' + data_stream 
+                        api_promote = '/_data_stream/_promote/' + data_stream 
                         # This currently doesn't work. See https://github.com/elastic/elasticsearch/issues/91947
                         # Because data stream promote is still waiting on leader index to complete indexing 
-                        diagnostics.add_api(api_promote)
+                        diagnostics.add_api(method + ' ' + api_promote)
+                        if execute:
+                            exec_curl(user, password, follower, method, api_promote, None)
 
     if len(ccr_indices)>0:
         instruction = '#  Step3. Promote indices (pause, close, unfollow, open)'
@@ -273,14 +288,19 @@ def build_instructions(diagnostics, ccr_follow_indices, ccr_autofollow_patterns,
                     instruction = '## Stop follow remote cluster [' + remote_cluster + ']'
                     diagnostics.add_comment(instruction)
                     for index in ccr_indices[remote_cluster]:
-                        api_pause = 'POST /' + index + '/_ccr/pause_follow/'
-                        api_close = 'POST /' + index + '/_close/'
-                        api_unfollow = 'POST /' + index + '/_ccr/unfollow/'
-                        api_open = 'POST /' + index + '/_open/'
-                        diagnostics.add_api(api_pause)
-                        diagnostics.add_api(api_close)
-                        diagnostics.add_api(api_unfollow)
-                        diagnostics.add_api(api_open)
+                        api_pause = index + '/_ccr/pause_follow/'
+                        api_close = index + '/_close/'
+                        api_unfollow = index + '/_ccr/unfollow/'
+                        api_open = index + '/_open/'
+                        diagnostics.add_api(method + ' ' + api_pause)
+                        diagnostics.add_api(method + ' ' + api_close)
+                        diagnostics.add_api(method + ' ' + api_unfollow)
+                        diagnostics.add_api(method + ' ' + api_open)
+                        if execute:
+                            exec_curl(user, password, follower, method, api_pause, None)
+                            exec_curl(user, password, follower, method, api_close, None)
+                            exec_curl(user, password, follower, method, api_unfollow, None)
+                            exec_curl(user, password, follower, method, api_open, None)
 
 
     if len(ccr_follow_indices)>0:
@@ -301,6 +321,7 @@ def build_instructions(diagnostics, ccr_follow_indices, ccr_autofollow_patterns,
 def write_instructions_to_file(diagnostics, diagnostic_bundle_root, file_name):
     path_file = os.sep.join([diagnostic_bundle_root, file_name])
     with open(path_file, 'w') as outfile:
+        logging.info('\n\n')
         logging.info(f'Instructions / APIs are written in {path_file}')
         for instruction in diagnostics.instructions:
             if instruction['type'] == 'comment':
@@ -328,16 +349,17 @@ def main():
     file_handler.setLevel(LOG_LEVEL)
     logging.getLogger().addHandler(file_handler)
 
-    (diagnostic_bundle_root, leader, follower) = parse_arguments()
+    (leader, follower, diagnostic_bundle_root, execute) = parse_arguments()
     if not diagnostic_bundle_root:
-        logging.info(f"Diagnostics data was not loaded. Will be talking to follower interactively")
-        diagnostics = get_diagnostics(follower)
+        logging.info(f"Diagnostics data was not loaded. Will be talking to follower interactively\n")
+        user,password = get_cred()
+        diagnostics = get_diagnostics(user,password,follower)
         diagnostic_bundle_root = "./"
-        is_commercial = ""
+        subdir = ""
     else:
-        is_commercial = "commercial"
+        subdir = "commercial"
 
-    diagnostics = load_diagnostics(diagnostic_bundle_root, is_commercial)
+    diagnostics = load_diagnostics(diagnostic_bundle_root, subdir)
 
     if not diagnostics.is_loaded:
         return logging.error(f"Diagnostics data from {diagnostic_bundle_root} cannot be loaded")
@@ -350,7 +372,7 @@ def main():
 
     if ccr_follow_indices:
         (ccr_data_streams, ccr_indices)=get_ccr_follower(diagnostics,ccr_follow_indices)
-        build_instructions(diagnostics, ccr_follow_indices, ccr_autofollow_patterns,ccr_data_streams, ccr_indices, leader)
+        build_instructions(diagnostics, ccr_follow_indices, ccr_autofollow_patterns, ccr_data_streams, ccr_indices, leader, user, password, follower, execute)
         file_name = "promote-" + diagnostics.version['cluster_name'] + (".txt")
         write_instructions_to_file(diagnostics, diagnostic_bundle_root, file_name)
     else:
