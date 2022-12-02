@@ -3,42 +3,8 @@
 #   This script takes Elasticsearch support diagnostics to generate a sequence
 #   of APIs to be executed to promote CCR followers to regular indices.
 #   
+#   Refer to README.md for detailed instructions
 #   
-#   1. Get autofollow patterns from _ccr/auto_follow 
-#   2. Get CCR follower indices from _ccr/stats 
-#   3. Find CCR follower data streams from 2.
-#   4. Print instruction:
-#     - Step1. Pause auto_follow patterns
-#     - Step2. Promote data streams
-#     - Step3. Promote indices (pause, close, unfollow, open)
-#   5. Additionally, it prints all indices promotes (for reference)
-#   
-#
-#   To Run with a remote cluster:
-#     python3 ccr_promote.py -f [https://es_endpoint:9200]
-#     python3 ccr_promote.py -f [https://es_endpoint:9200] -l [leader_cluster]
-#
-#
-#   To Run with a diagnostics bundle:
-#     python3 ccr_promote.py [path_to_diag/api-diagnostics-ccr_promote_test0]
-#     python3 ccr_promote.py [path_to_diag/api-diagnostics-ccr_promote_test0] -l [leader_cluster]
-#
-#   Diagnostics (Input) can be generated from https://github.com/elastic/support-diagnostics
-#
-###############################################################################
-#
-# usage: ccr_promote.py [-h] [-l LEADER] path_to_diagnostics
-#
-# Build required APIs to promote ccr followers
-#
-# positional arguments:
-#   path_to_diagnostics   path to the unzipped Elasticsearch support diagnostics bundle
-#
-# optional arguments:
-#   -h, --help            show this help message and exit
-#   -l LEADER, --leader LEADER
-#                         Specify specific leader cluster for promoting.
-#
 ###############################################################################
 
 import argparse
@@ -87,23 +53,28 @@ def load_diagnostics(path,subdir):
         path_file = os.sep.join([path, VERSION_JSON])
         with open(path_file) as f:
             diagnostics.version = json.load(f)
-            cluster_version = parse(diagnostics.version['version']['number'].split("-",1)[0])
+            if 'version' in diagnostics.version:
+                cluster_version = parse(diagnostics.version['version']['number'].split("-",1)[0])
+                if cluster_version >= Version(ES_CCR_VERSION):
+                    path_file = os.sep.join([path, subdir, DATA_STREAM_JSON])
+                    with open(path_file) as f:
+                        diagnostics.data_stream = json.load(f)
 
-        if cluster_version >= Version(ES_CCR_VERSION):
+                    path_file = os.sep.join([path, subdir, CCR_STATS_JSON])
+                    with open(path_file) as f:
+                        diagnostics.ccr_stats = json.load(f)
 
-            path_file = os.sep.join([path, subdir, DATA_STREAM_JSON])
-            with open(path_file) as f:
-                diagnostics.data_stream = json.load(f)
+                    path_file = os.sep.join([path, subdir, CCR_AUTOFOLLOW_PATTERNS_JSON])
+                    with open(path_file) as f:
+                        diagnostics.ccr_autofollow_patterns = json.load(f)
 
-            path_file = os.sep.join([path, subdir, CCR_STATS_JSON])
-            with open(path_file) as f:
-                diagnostics.ccr_stats = json.load(f)
+                    diagnostics.is_loaded = True
+                
+            else:
+                diagnostics.is_loaded = False
 
-            path_file = os.sep.join([path, subdir, CCR_AUTOFOLLOW_PATTERNS_JSON])
-            with open(path_file) as f:
-                diagnostics.ccr_autofollow_patterns = json.load(f)
 
-        diagnostics.is_loaded = True
+
 
     except FileNotFoundError as e:
         diagnostics.is_loaded = False
@@ -121,7 +92,7 @@ def parse_arguments():
                         help='specify follower cluster endpoint, ie https://es_endpoint:9200')
     parser.add_argument('-l', dest='leader', default='all',
                         help='specify name of the remote cluster (leader) currently experience downtime. If not specified, it will operate on follower indices from all remote clusters.')
-    parser.add_argument('--execute', action='store_true', help='Without this flag, instructions will be printed to a file. You can specify this flag to execute commands when -f is used.')
+    parser.add_argument('--execute', action='store_true', help='Without this flag, instructions will be printed to a file. You need to specify this flag to execute commands directly to the follower cluster when -f is used.')
     args = parser.parse_args()
     return args.leader, args.follower, args.diag, args.execute
 
@@ -140,6 +111,8 @@ def exec_curl(user, password, follower, method, api, output):
         print ('Running ' + method + ' ' + api)
         os.system("curl -s -X" + method + " -u " + user + ":" + password + " " + follower + api )
         print ('')
+
+    return 
 
 def get_diagnostics(user,password,follower):
     method = "GET"
@@ -362,7 +335,10 @@ def main():
     diagnostics = load_diagnostics(diagnostic_bundle_root, subdir)
 
     if not diagnostics.is_loaded:
-        return logging.error(f"Diagnostics data from {diagnostic_bundle_root} cannot be loaded")
+        if follower:
+            return logging.error(f'Failed to authenticate with provided username and password to follower')
+        else:
+            return logging.error(f"Diagnostics data from {diagnostic_bundle_root} cannot be loaded")
 
     cluster_version = diagnostics.version['version']['number']
     logging.info(f'Cluster version: {cluster_version}')
@@ -372,7 +348,11 @@ def main():
 
     if ccr_follow_indices:
         (ccr_data_streams, ccr_indices)=get_ccr_follower(diagnostics,ccr_follow_indices)
-        build_instructions(diagnostics, ccr_follow_indices, ccr_autofollow_patterns, ccr_data_streams, ccr_indices, leader, user, password, follower, execute)
+        if follower:
+            build_instructions(diagnostics, ccr_follow_indices, ccr_autofollow_patterns, ccr_data_streams, ccr_indices, leader, user, password, follower, execute)
+        else:
+            build_instructions(diagnostics, ccr_follow_indices, ccr_autofollow_patterns, ccr_data_streams, ccr_indices, leader, None, None, None, False)
+
         file_name = "promote-" + diagnostics.version['cluster_name'] + (".txt")
         write_instructions_to_file(diagnostics, diagnostic_bundle_root, file_name)
     else:
