@@ -11,10 +11,17 @@
 #     - Step1. Pause auto_follow patterns
 #     - Step2. Promote data streams
 #     - Step3. Promote indices (pause, close, unfollow, open)
+#   5. Additionally, it prints all indices promotes (for reference)
 #   
-#   To Run: python3 ccr_promote.py -h
-#   To Run: python3 ccr_promote.py [path_to_diag]/api-diagnostics-ccr_promote_test0
-#   To Run: python3 ccr_promote.py [path_to_diag]/api-diagnostics-ccr_promote_test0 -l [leader_cluster]
+#
+#   To Run with a remote cluster:
+#     python3 ccr_promote.py -f [https://es_endpoint:9200]
+#     python3 ccr_promote.py -f [https://es_endpoint:9200] -l [leader_cluster]
+#
+#
+#   To Run with a diagnostics bundle:
+#     python3 ccr_promote.py [path_to_diag]/api-diagnostics-ccr_promote_test0
+#     python3 ccr_promote.py [path_to_diag]/api-diagnostics-ccr_promote_test0 -l [leader_cluster]
 #
 #   Diagnostics (Input) can be generated from https://github.com/elastic/support-diagnostics
 #
@@ -39,8 +46,8 @@ import json
 import logging
 import os
 import sys
+import getpass
 
-import pandas as pd
 from packaging.version import Version, parse
 
 # configuration
@@ -72,26 +79,27 @@ class DiagnosticsData:
         self.instructions.append({'type': 'api', 'text': api})
 
 
-def load_diagnostics(path):
+def load_diagnostics(path,is_commercial):
     diagnostics = DiagnosticsData()
+
 
     try:
         path_file = os.sep.join([path, VERSION_JSON])
         with open(path_file) as f:
             diagnostics.version = json.load(f)
-        cluster_version = parse(diagnostics.version['version']['number'])
+            cluster_version = parse(diagnostics.version['version']['number'].split("-",1)[0])
 
         if cluster_version >= Version(ES_CCR_VERSION):
 
-            path_file = os.sep.join([path, "commercial", DATA_STREAM_JSON])
+            path_file = os.sep.join([path, is_commercial, DATA_STREAM_JSON])
             with open(path_file) as f:
                 diagnostics.data_stream = json.load(f)
 
-            path_file = os.sep.join([path, "commercial", CCR_STATS_JSON])
+            path_file = os.sep.join([path, is_commercial, CCR_STATS_JSON])
             with open(path_file) as f:
                 diagnostics.ccr_stats = json.load(f)
 
-            path_file = os.sep.join([path, "commercial", CCR_AUTOFOLLOW_PATTERNS_JSON])
+            path_file = os.sep.join([path, is_commercial, CCR_AUTOFOLLOW_PATTERNS_JSON])
             with open(path_file) as f:
                 diagnostics.ccr_autofollow_patterns = json.load(f)
 
@@ -106,14 +114,37 @@ def load_diagnostics(path):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Build required APIs to promote ccr followers')
-    parser.add_argument("path", metavar='path_to_diagnostics',
+    parser.add_argument("-p", "--path", metavar='path_to_diagnostics',
                         help="path to the unzipped Elasticsearch support diagnostics bundle")
     parser.add_argument("-l", "--leader", default='all',
                         help="Specify follower from specific leader cluster")
+    parser.add_argument("-f", "--follower", default='all',
+                        help="Specify follower cluster")
     args = parser.parse_args()
-    return args.path, args.leader
+    return args.path, args.leader, args.follower
+
+def get_cred():
+
+    user = input ("Enter username for follower:")
+    password = getpass.getpass(prompt = 'Enter password for follower:')
+
+    return user, password
+
+def exec_curl(user, password, follower, api, output):
+
+    os.system("curl -s -XGET -u " + user + ":" + password + " -o " + output + " " + follower + api + "?pretty")
+
+def get_diagnostics(follower):
+    user,password = get_cred()
+
+    exec_curl(user, password, follower,"/",VERSION_JSON)
+    exec_curl(user, password, follower,"/_ccr/stats",CCR_STATS_JSON)
+    exec_curl(user, password, follower,"/_data_stream",DATA_STREAM_JSON)
+    exec_curl(user, password, follower,"/_ccr/auto_follow",CCR_AUTOFOLLOW_PATTERNS_JSON)
+
 
 def get_ccr_autofollow_patterns(diagnostics):
+
     if not diagnostics.ccr_autofollow_patterns['patterns']:
         logging.info(f'No CCR autofollow patterns defined')
         return
@@ -297,8 +328,17 @@ def main():
     file_handler.setLevel(LOG_LEVEL)
     logging.getLogger().addHandler(file_handler)
 
-    (diagnostic_bundle_root, leader) = parse_arguments()
-    diagnostics = load_diagnostics(diagnostic_bundle_root)
+    (diagnostic_bundle_root, leader, follower) = parse_arguments()
+    if not diagnostic_bundle_root:
+        logging.info(f"Diagnostics data was not loaded. Will be talking to follower interactively")
+        diagnostics = get_diagnostics(follower)
+        diagnostic_bundle_root = "./"
+        is_commercial = ""
+    else:
+        is_commercial = "commercial"
+
+    diagnostics = load_diagnostics(diagnostic_bundle_root, is_commercial)
+
     if not diagnostics.is_loaded:
         return logging.error(f"Diagnostics data from {diagnostic_bundle_root} cannot be loaded")
 
